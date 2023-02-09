@@ -1,11 +1,11 @@
-import React, {useState} from 'react'
-
-const CONSTANTS = require('../utils/constants.js');
+import React from 'react'
 
 function ReleaseItem({ release }) {
-
     return (
-        <li>{release.basic_information.id}</li>
+        <li>
+            {release.basic_information.id + ' --- '} 
+            <img src={release.basic_information.thumb} alt='alt' width='125' height='125'/>
+        </li>
     );
 }
 

@@ -1,6 +1,5 @@
 import React, {useState} from 'react'
 import { getDiscogsCollectionPageList } from '../utils/processData.js';
-const CONSTANTS = require('../utils/constants.js');
 
 function DiscogsUserSearchForm({ setReleaseListState }) {
 	const [input, setInput] = useState('');

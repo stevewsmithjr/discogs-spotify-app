@@ -2,7 +2,6 @@ import React, {useState} from 'react'
 import DiscogsUserSearchForm from './components/DiscogsUserSearchForm';
 import ReleaseItemList from './components/ReleaseItemList';
 
-
 function App() {
 	const [releaseList, setReleaseList] = useState([]);
     const setReleaseListState = (pageList) => {
@@ -17,7 +16,7 @@ function App() {
     return (
         <div>
             <DiscogsUserSearchForm setReleaseListState={ setReleaseListState } />
-            { releaseList
+            { releaseList.length > 0
                 ? (<ReleaseItemList releaseList={ releaseList } />)
                 : (<div>nada</div>)
             }

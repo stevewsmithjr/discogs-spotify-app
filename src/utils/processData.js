@@ -10,7 +10,6 @@ async function getDiscogsCollectionPageList(usernameInput) {
                 promiseList.push(fetchRecsByPage(usernameInput, page));
             }
         }
-        console.log(promiseList)
         return Promise.all(promiseList);
     });
 }
