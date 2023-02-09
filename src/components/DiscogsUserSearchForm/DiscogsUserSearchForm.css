@@ -1,0 +1,41 @@
+.form {
+  width: 440px;
+  margin: auto;
+}
+
+.form__label {
+  margin-bottom: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 20px;
+  margin-top: 0;
+}
+
+.form__input {
+  margin-bottom: 24px;
+  width: 400px;
+  height: 60px;
+  border: 1px solid #000;
+  padding: 0;
+  border-radius: 30px;
+}
+
+.form__submit {
+  border: none;
+  border-radius: 30px;
+  width: 124px;
+  height: 60px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 20px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.form__submit:hover {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.form__submit:disabled {
+  background-color: rgba(0, 0, 0, 0.3);
+}

@@ -1,0 +1,28 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 1360px;
+  margin: 0 auto 28px;
+  height: 40px;
+}
+
+.header__left {
+  display: flex;
+  align-items: center;
+}
+
+.header__logo {
+  width: 89px;
+  height: 40px;
+  margin-right: 24px;
+}
+
+.header__right {
+  display: flex;
+  align-items: center;
+}
+
+.header__title {
+  display: flex;
+}

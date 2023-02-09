@@ -1,0 +1,22 @@
+.releases {
+  display: flex;
+  flex-direction: column;
+}
+
+.releases__text {
+  font-size: 20px;
+  line-height: 25px;
+  font-weight: 700;
+  height: 25px;
+  margin-right: 20px;
+}
+
+.releases__list {
+  display: grid;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  grid-template-columns: repeat(3, 1fr);
+  row-gap: 20px;
+  column-gap: 20px;
+}

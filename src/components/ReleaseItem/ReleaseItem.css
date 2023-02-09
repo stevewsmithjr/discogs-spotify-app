@@ -1,0 +1,27 @@
+.card {
+  height: 328px;
+  width: 328px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 19px;
+  box-sizing: border-box;
+  list-style: none;
+  position: relative;
+}
+
+.card__image {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  object-fit: cover;
+}
+
+.card__title {
+  background-color: #fff;
+  z-index: 1;
+  position: relative;
+  height: 26px;
+  margin-top: 300px;
+
+}

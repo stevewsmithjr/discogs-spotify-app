@@ -14,4 +14,8 @@ async function getDiscogsCollectionPageList(usernameInput) {
     });
 }
 
-export { getDiscogsCollectionPageList };
+function buildDiscogsReleasePageUrl (release) { 
+    return `https://www.discogs.com/release/${release.basic_information.id}`; 
+}
+
+export { getDiscogsCollectionPageList, buildDiscogsReleasePageUrl };
