@@ -1,25 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {useState} from 'react'
+import DiscogsUserSearchForm from './components/DiscogsUserSearchForm';
+import ReleaseItemList from './components/ReleaseItemList';
+
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const [releaseList, setReleaseList] = useState([]);
+    const setReleaseListState = (pageList) => {
+        let releaseList = [];
+			pageList.forEach(array => {
+				array.releases.forEach(release => {
+					releaseList.push(release);
+				});
+			});
+            setReleaseList(releaseList);
+    }
+    return (
+        <div>
+            <DiscogsUserSearchForm setReleaseListState={ setReleaseListState } />
+            { releaseList
+                ? (<ReleaseItemList releaseList={ releaseList } />)
+                : (<div>nada</div>)
+            }
+                
+        </div>
+    );
 }
 
 export default App;
