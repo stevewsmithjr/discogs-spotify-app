@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 
-const CONSTANTS = require('../constants.js');
+const CONSTANTS = require('../utils/constants.js');
 
 function ReleaseItem({ release }) {
 

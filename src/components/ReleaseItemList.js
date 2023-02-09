@@ -7,8 +7,8 @@ function ReleaseItemList({ releaseList }) {
         <div>
             <ul>
                 { releaseList.map(
-                    ((release) => 
-                        <ReleaseItem release={ release } />
+                    ((release, index) => 
+                        <ReleaseItem release={ release }  key={ index }/>
                     )
                 )}
             </ul>
