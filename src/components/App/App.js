@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import './App.css';
 import Header from '../Header/Header';
 import Main from '../Main/Main';
@@ -7,6 +7,7 @@ import { getDiscogsCollectionPageList } from '../../utils/processData';
 
 function App() {
 	const [releaseList, setReleaseList] = useState([]);
+
     const setReleaseListState = (pageList) => {
         let releaseList = [];
 			pageList.forEach(array => {
@@ -27,10 +28,28 @@ function App() {
             });
     }
 
+    const sortReleaseListByArtist = () => {
+        const sortedReleases = [...releaseList];
+        sortedReleases.sort((releaseA, releaseB) => {
+            const nameA = releaseA.basic_information.artists[0].name.toLowerCase();
+            const nameB = releaseB.basic_information.artists[0].name.toLowerCase();
+            if (nameA < nameB) {
+                return -1;
+            }
+            else if (nameA > nameB) {
+                return 1;
+            }
+            else {
+                return 0;
+            }
+        });
+        setReleaseList(sortedReleases);
+    }
+
     return (
         <div className="App">
             <Header />
-            <Main handleUserSearchFormSubmit={handleUserSearchFormSubmit} releaseList={releaseList} />
+            <Main handleUserSearchFormSubmit={handleUserSearchFormSubmit} sortReleaseListByArtist={sortReleaseListByArtist} releaseList={releaseList} />
             <Footer />
         </div>
     );
