@@ -7,20 +7,11 @@ import { getDiscogsCollectionPageList } from '../../utils/processData';
 
 function App() {
 	const [releaseList, setReleaseList] = useState([]);
-    const setReleaseListState = (pageList) => {
-        let releaseList = [];
-			pageList.forEach(array => {
-				array.releases.forEach(release => {
-					releaseList.push(release);
-				});
-			});
-            setReleaseList(releaseList);
-    }
 
     const handleUserSearchFormSubmit = (input) => {
         getDiscogsCollectionPageList(input)
             .then(pageList => {
-			    setReleaseListState(pageList);
+			    setReleaseList(pageList.flatMap(page => page.releases));
 		    })
             .catch((err) => {
                 console.log(err);
