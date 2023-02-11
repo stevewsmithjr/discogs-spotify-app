@@ -1,16 +1,21 @@
 import React from 'react';
 
-function SortButtons({ sortReleaseListByArtist }) {
+function SortButtons({ sortReleaseListByArtist, sortReleaseListByAlbumTitle }) {
 
-    const handlePress = (e) => {
+    const handleArtistSortPress = (e) => {
 		e.preventDefault();
 		sortReleaseListByArtist();
 	}
 
+    const handleAlbumTitleSortPress = (e) => {
+        e.preventDefault();
+        sortReleaseListByAlbumTitle();
+    }
+
     return(
         <div className="btn-group">
-            <button onClick={handlePress}>Artist</button>
-            <button>Album Title</button>
+            <button onClick={handleArtistSortPress}>Artist</button>
+            <button onClick={handleAlbumTitleSortPress}>Album Title</button>
             <button>Toast</button>
         </div>
     )

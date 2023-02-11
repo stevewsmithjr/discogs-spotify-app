@@ -3,7 +3,7 @@ import DiscogsUserSearchForm from '../DiscogsUserSearchForm/DiscogsUserSearchFor
 import ReleaseItemList from '../ReleaseItemList/ReleaseItemList';
 import SortButtons from '../SortButtons/SortButtons';
 
-function Main ({ handleUserSearchFormSubmit, sortReleaseListByArtist, releaseList }) {
+function Main ({ handleUserSearchFormSubmit, sortReleaseListByArtist, sortReleaseListByAlbumTitle, releaseList }) {
   
   return (
     <main className="main">
@@ -11,7 +11,7 @@ function Main ({ handleUserSearchFormSubmit, sortReleaseListByArtist, releaseLis
         Connect your Discogs account to view your collection
       </h2>
       <DiscogsUserSearchForm handleUserSearchFormSubmit={handleUserSearchFormSubmit} />
-      <SortButtons sortReleaseListByArtist={sortReleaseListByArtist} />
+      <SortButtons sortReleaseListByArtist={sortReleaseListByArtist} sortReleaseListByAlbumTitle={sortReleaseListByAlbumTitle} />
       <ReleaseItemList releaseList={releaseList} />
     </main>
   )

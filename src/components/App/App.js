@@ -56,11 +56,29 @@ function App() {
         setReleaseList(sortedReleases);
     }
 
+    const sortReleaseListByAlbumTitle = () => {
+        const sortedReleases = [...releaseList];
+        sortedReleases.sort((releaseA, releaseB) => {
+            const nameA = releaseA.basic_information.title.toLowerCase();
+            const nameB = releaseB.basic_information.title.toLowerCase();
+            if (nameA < nameB) {
+                return -1;
+            }
+            else if (nameA > nameB) {
+                return 1;
+            }
+            else {
+                return 0;
+            }
+        });
+        setReleaseList(sortedReleases);
+    }
+
     
     return (
         <div className="App">
             <Header />
-            <Main handleUserSearchFormSubmit={handleUserSearchFormSubmit} sortReleaseListByArtist={sortReleaseListByArtist} releaseList={releaseList} />
+            <Main handleUserSearchFormSubmit={handleUserSearchFormSubmit} sortReleaseListByArtist={sortReleaseListByArtist} sortReleaseListByAlbumTitle={sortReleaseListByAlbumTitle} releaseList={releaseList} />
             <Footer />
         </div>
     );
