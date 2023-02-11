@@ -1,12 +1,15 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
 import './App.css';
 import Header from '../Header/Header';
 import Main from '../Main/Main';
 import Footer from '../Footer/Footer';
 import { getDiscogsCollectionPageList } from '../../utils/processData';
+import { getAuthenticatedSpotifyToken } from '../../utils/spotifyAPI';
 
 function App() {
 	const [releaseList, setReleaseList] = useState([]);
+    const [autheticatedSpotifyToken, setAuthenticatedSpotifyToken] = useState('');
+    
 
     const setReleaseListState = (pageList) => {
         let releaseList = [];
@@ -23,6 +26,13 @@ function App() {
             .then(pageList => {
 			    setReleaseListState(pageList);
 		    })
+            .catch((err) => {
+                console.log(err);
+            });
+        getAuthenticatedSpotifyToken()
+            .then(token => {
+                setAuthenticatedSpotifyToken(token);
+            })
             .catch((err) => {
                 console.log(err);
             });
@@ -46,6 +56,7 @@ function App() {
         setReleaseList(sortedReleases);
     }
 
+    
     return (
         <div className="App">
             <Header />
