@@ -1,41 +1,68 @@
-.form {
-  width: 440px;
-  margin: auto;
+.username__form {
+  margin: 32px auto 0;
+  display: flex;
+  justify-content: center;
+  border: 4px solid #1e4790;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 24px;
+  box-sizing: border-box;
+
 }
 
 .form__label {
-  margin-bottom: 8px;
-  font-size: 16px;
+  margin: 0 12px 0 0;
+  font-size: 20px;
   font-weight: 700;
-  line-height: 20px;
-  margin-top: 0;
+  line-height: 60px;
+  width: 240px;
 }
 
 .form__input {
   margin-bottom: 24px;
+  margin-right: 16px;
   width: 400px;
   height: 60px;
-  border: 1px solid #000;
+  border: 1px solid rgb(207, 207, 207);
   padding: 0;
   border-radius: 30px;
+  box-sizing: border-box;
 }
 
 .form__submit {
+  box-sizing: border-box;
   border: none;
   border-radius: 30px;
-  width: 124px;
+  width: 200px;
   height: 60px;
   font-size: 16px;
   font-weight: 700;
   line-height: 20px;
   cursor: pointer;
   padding: 0;
+  color: #fff;
+  background-color: rgb(47, 113, 229);
 }
 
 .form__submit:hover {
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: #fff;
+  color: rgba(47, 113, 229);
+  border: 2px solid rgba(47, 113, 229);
 }
 
 .form__submit:disabled {
   background-color: rgba(0, 0, 0, 0.3);
+}
+
+@media screen and (max-width: 700px) {
+  .username__form {
+    border: none;
+    width: 320px;
+  }
+
+  .form__input {
+    width: 300px;
+    margin-right: 0;
+
+  }
 }

@@ -1,6 +1,5 @@
 import React from 'react';
 import './Header.css';
-// import logo from '../../images/discogifyLogo';
 
 function Header() {
 
@@ -9,8 +8,11 @@ function Header() {
       <div className="header__left">
         <img className="header__logo" alt="Discogify logo" />
       </div>
-      <div className="header__right">
+      <div className="header__center">
         <h1 className="header__title">Discogify</h1>
+      </div>
+      <div className="header__right">
+        <h3 className="header__about">About</h3>
       </div>
     </header>
   )

@@ -1,6 +1,24 @@
 .App {
-  background-color: #F3F3F3;
+  background-color: #f3f3f3;
   margin: auto;
   max-width: 1440px;
-  padding: 32px 40px 24px;
+  min-width: 320px;
+  padding: 0 40px 24px;
+  font-family: 'Inter';
+  box-sizing: border-box;
+}
+
+@media screen and (max-width: 900px) {
+  .App {
+    width: 700px;
+    margin: auto;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .App {
+    width: 320px;
+    margin: auto;
+    padding: 0;
+  }
 }

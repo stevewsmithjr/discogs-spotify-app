@@ -9,6 +9,7 @@ function ReleaseItem({ release }) {
                 <img src={release.basic_information.thumb} alt='Album cover' className="card__image" />
             </a>
             <h3 className="card__title" >{release.basic_information.title}</h3>
+            <p className="card__bottom-artist">{release.basic_information.artists[0].name}</p>
         </li>
     );
 }

@@ -1,6 +1,7 @@
 .releases {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .releases__text {
@@ -16,7 +17,18 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, 300px);
   row-gap: 20px;
   column-gap: 20px;
+  justify-content: center;
+}
+
+@media screen and (max-width: 700px) {
+  .releases {
+    align-items: center;
+  }
+
+  .releases__text {
+    margin-right: 0;
+  }
 }

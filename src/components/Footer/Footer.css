@@ -1,0 +1,25 @@
+.footer {
+  display: flex;
+  justify-content: space-between;
+  margin: auto;
+}
+
+.footer__name {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.footer__year {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+@media screen and (max-width: 700px) {
+  .footer {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}
