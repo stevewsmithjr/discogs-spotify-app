@@ -2,7 +2,7 @@ import React from 'react'
 import ReleaseItem from '../ReleaseItem/ReleaseItem'
 import './ReleaseItemList.css';
 
-function ReleaseItemList({ releaseMap }) {
+function ReleaseItemList({ handleReleaseClicked, releaseMap }) {
 
     return (
         <section className="releases">
@@ -10,7 +10,7 @@ function ReleaseItemList({ releaseMap }) {
             <ul className="releases__list">
                 {[...releaseMap.values()].map(
                     (release, index) => {
-                        return <ReleaseItem release={ release }  key={ index }/>
+                        return <ReleaseItem release={ release } handleReleaseClicked={handleReleaseClicked} key={ release.id }/>
                     }
                 )}
             </ul>

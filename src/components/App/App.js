@@ -9,6 +9,7 @@ import { getDiscogsUserFullCollection } from '../../utils/discogsAPI';
 
 function App() {
 	const [releaseMap, setReleaseMap] = useState(new Map());
+    const [selectedReleaseMap, setSelectedReleaseMap] = useState(new Map());
     const [autheticatedSpotifyToken, setAuthenticatedSpotifyToken] = useState('');
     
     const handleUserSearchFormSubmit = (input) => {
@@ -27,6 +28,17 @@ function App() {
             .catch((err) => {
                 console.log(err);
             });
+    }
+
+    const handleReleaseClicked = (release) => {
+        const updatedReleaseMap = new Map(selectedReleaseMap);
+        if (updatedReleaseMap.has(release.id)) {
+            updatedReleaseMap.delete(release.id);
+        }
+        else {
+            updatedReleaseMap.set(release.id, release);
+        }
+        setSelectedReleaseMap(updatedReleaseMap);
     }
 
     const sortReleaseMapByArtist = () => {
@@ -70,7 +82,8 @@ function App() {
     return (
         <div className="App">
             <Header />
-            <Main handleUserSearchFormSubmit={handleUserSearchFormSubmit} sortReleaseMapByArtist={sortReleaseMapByArtist} sortReleaseMapByAlbumTitle={sortReleaseMapByAlbumTitle} releaseMap={releaseMap} />
+            <Main handleUserSearchFormSubmit={handleUserSearchFormSubmit} handleReleaseClicked={handleReleaseClicked}
+                sortReleaseMapByArtist={sortReleaseMapByArtist} sortReleaseMapByAlbumTitle={sortReleaseMapByAlbumTitle} releaseMap={releaseMap} />
             <Footer />
         </div>
     );

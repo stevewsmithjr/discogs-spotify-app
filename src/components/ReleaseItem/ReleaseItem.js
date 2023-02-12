@@ -1,13 +1,20 @@
-import React from 'react'
+import React, {useState} from 'react'
 import './ReleaseItem.css';
 import { buildDiscogsReleasePageUrl } from '../../utils/processData';
 
-function ReleaseItem({ release }) {
+function ReleaseItem({ release , handleReleaseClicked}) {
+    const [isSelected, setIsSelected] = useState(false);
+    const releaseItemClicked = () => {
+        const update = !isSelected;
+        setIsSelected(update);
+        handleReleaseClicked(release);
+    }
     return (
-        <li className="card">
-            <a href={buildDiscogsReleasePageUrl(release)} target="_blank">
+        <li className={isSelected ? 'card-selected' : 'card'} onClick={releaseItemClicked}>
+            {/* <a href={buildDiscogsReleasePageUrl(release)} target="_blank">
                 <img src={release.basic_information.thumb} alt='Album cover' className="card__image" />
-            </a>
+            </a> */}
+            <img src={release.basic_information.thumb} alt='Album cover' className="card__image" />
             <h3 className="card__title" >{release.basic_information.title}</h3>
             <p className="card__bottom-artist">{release.basic_information.artists[0].name}</p>
         </li>
