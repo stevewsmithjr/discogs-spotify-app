@@ -3,17 +3,19 @@ import './App.css';
 import Header from '../Header/Header';
 import Main from '../Main/Main';
 import Footer from '../Footer/Footer';
-import { getDiscogsCollectionPageList } from '../../utils/processData';
+import { buildReleaseMapFromPageList, buildReleaseMapFromReleaseList } from '../../utils/processData';
 import { getAuthenticatedSpotifyToken } from '../../utils/spotifyAPI';
+import { getDiscogsUserFullCollection } from '../../utils/discogsAPI';
 
 function App() {
-	const [releaseList, setReleaseList] = useState([]);
+	const [releaseMap, setReleaseMap] = useState(new Map());
     const [autheticatedSpotifyToken, setAuthenticatedSpotifyToken] = useState('');
     
     const handleUserSearchFormSubmit = (input) => {
-        getDiscogsCollectionPageList(input)
+        getDiscogsUserFullCollection(input)
             .then(pageList => {
-			    setReleaseList(pageList.flatMap(page => page.releases));
+                const releaseMap = buildReleaseMapFromPageList(pageList);
+			    setReleaseMap(releaseMap);
 		    })
             .catch((err) => {
                 console.log(err);
@@ -27,9 +29,9 @@ function App() {
             });
     }
 
-    const sortReleaseListByArtist = () => {
-        const sortedReleases = [...releaseList];
-        sortedReleases.sort((releaseA, releaseB) => {
+    const sortReleaseMapByArtist = () => {
+        const sortedReleaseList = [...releaseMap.values()];
+        sortedReleaseList.sort((releaseA, releaseB) => {
             const nameA = releaseA.basic_information.artists[0].name.toLowerCase();
             const nameB = releaseB.basic_information.artists[0].name.toLowerCase();
             if (nameA < nameB) {
@@ -42,12 +44,13 @@ function App() {
                 return 0;
             }
         });
-        setReleaseList(sortedReleases);
+        const sortedReleaseMap = buildReleaseMapFromReleaseList(sortedReleaseList);
+        setReleaseMap(sortedReleaseMap);
     }
 
-    const sortReleaseListByAlbumTitle = () => {
-        const sortedReleases = [...releaseList];
-        sortedReleases.sort((releaseA, releaseB) => {
+    const sortReleaseMapByAlbumTitle = () => {
+        const sortedReleaseList = [...releaseMap.values()];
+        sortedReleaseList.sort((releaseA, releaseB) => {
             const nameA = releaseA.basic_information.title.toLowerCase();
             const nameB = releaseB.basic_information.title.toLowerCase();
             if (nameA < nameB) {
@@ -60,14 +63,14 @@ function App() {
                 return 0;
             }
         });
-        setReleaseList(sortedReleases);
+        const sortedReleaseMap = buildReleaseMapFromReleaseList(sortedReleaseList);
+        setReleaseMap(sortedReleaseMap);
     }
-
-    
+ 
     return (
         <div className="App">
             <Header />
-            <Main handleUserSearchFormSubmit={handleUserSearchFormSubmit} sortReleaseListByArtist={sortReleaseListByArtist} sortReleaseListByAlbumTitle={sortReleaseListByAlbumTitle} releaseList={releaseList} />
+            <Main handleUserSearchFormSubmit={handleUserSearchFormSubmit} sortReleaseMapByArtist={sortReleaseMapByArtist} sortReleaseMapByAlbumTitle={sortReleaseMapByAlbumTitle} releaseMap={releaseMap} />
             <Footer />
         </div>
     );

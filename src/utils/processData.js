@@ -1,21 +1,26 @@
-import { fetchRecsByPage } from './discogsAPI'
 
-async function getDiscogsCollectionPageList(usernameInput) {
-    return await fetchRecsByPage(usernameInput, 1).then(data => {
-        let promiseList = [data];
-        if (data.pagination.pages > 1) {
-            let totalPages = data.pagination.pages;
-            
-            for (let page = 2; page <= totalPages; page++) {
-                promiseList.push(fetchRecsByPage(usernameInput, page));
-            }
+function buildReleaseMapFromPageList(pageList) {
+    const releaseArray = pageList.flatMap(page => page.releases);
+    const releaseMap = new Map();
+    releaseArray.forEach((release) => {
+        if (!releaseMap.has(release.id)) {
+            releaseMap.set(release.id, release);
         }
-        return Promise.all(promiseList);
     });
+    return releaseMap;
+}
+function buildReleaseMapFromReleaseList(releaseList) {
+    const releaseMap = new Map();
+    releaseList.forEach((release) => {
+        if (!releaseMap.has(release.id)) {
+            releaseMap.set(release.id, release);
+        }
+    });
+    return releaseMap;
 }
 
 function buildDiscogsReleasePageUrl (release) { 
-    return `https://www.discogs.com/release/${release.basic_information.id}`; 
+    return `https://www.discogs.com/release/${release.id}`; 
 }
 
-export { getDiscogsCollectionPageList, buildDiscogsReleasePageUrl };
+export { buildReleaseMapFromPageList, buildDiscogsReleasePageUrl, buildReleaseMapFromReleaseList };

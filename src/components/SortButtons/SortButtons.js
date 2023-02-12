@@ -1,15 +1,15 @@
 import React from 'react';
 
-function SortButtons({ sortReleaseListByArtist, sortReleaseListByAlbumTitle }) {
+function SortButtons({ sortReleaseMapByArtist, sortReleaseMapByAlbumTitle }) {
 
     const handleArtistSortPress = (e) => {
 		e.preventDefault();
-		sortReleaseListByArtist();
+		sortReleaseMapByArtist();
 	}
 
     const handleAlbumTitleSortPress = (e) => {
         e.preventDefault();
-        sortReleaseListByAlbumTitle();
+        sortReleaseMapByAlbumTitle();
     }
 
     return(
