@@ -1,16 +1,31 @@
-import React from 'react'
+import React, {useCallback, useState} from 'react'
 import ReleaseItem from '../ReleaseItem/ReleaseItem'
 import './ReleaseItemList.css';
 
-function ReleaseItemList({ handleReleaseClicked, releaseMap }) {
+function ReleaseItemList({ releaseMap }) {
+
+    const [selectedReleaseMap, setSelectedReleaseMap] = useState(new Map());
+    const handleReleaseItemClick = useCallback( (release) => {
+        const updatedReleaseMap = new Map(selectedReleaseMap);
+        if (updatedReleaseMap.has(release.id)) {
+            updatedReleaseMap.delete(release.id);
+        }
+        else {
+            updatedReleaseMap.set(release.id, release);
+        }
+        console.log('toast: ', updatedReleaseMap);
+        setSelectedReleaseMap(updatedReleaseMap);
+    }, [selectedReleaseMap]);
 
     return (
         <section className="releases">
             <h3 className="releases__text">Your collection</h3>
             <ul className="releases__list">
                 {[...releaseMap.values()].map(
-                    (release, index) => {
-                        return <ReleaseItem release={ release } handleReleaseClicked={handleReleaseClicked} key={ release.id }/>
+                    (release) => {
+                        const isSelected = selectedReleaseMap.has(release.id);
+                        return <ReleaseItem release={ release } isSelected={isSelected} 
+                            handleReleaseItemClick={handleReleaseItemClick} key={ release.id }/>
                     }
                 )}
             </ul>
