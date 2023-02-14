@@ -73,7 +73,7 @@ function App() {
     return (
         <div className="App">
             <Header />
-            <Main handleUserSearchFormSubmit={handleUserSearchFormSubmit} 
+            <Main autheticatedSpotifyToken={autheticatedSpotifyToken} handleUserSearchFormSubmit={handleUserSearchFormSubmit}
                 sortReleaseMapByArtist={sortReleaseMapByArtist} sortReleaseMapByAlbumTitle={sortReleaseMapByAlbumTitle} releaseMap={releaseMap} />
             <Footer />
         </div>

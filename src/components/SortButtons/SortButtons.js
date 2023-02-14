@@ -1,6 +1,6 @@
 import React from 'react';
 
-function SortButtons({ sortReleaseMapByArtist, sortReleaseMapByAlbumTitle }) {
+function SortButtons({ sortReleaseMapByArtist, sortReleaseMapByAlbumTitle, handleSpotifySubmit }) {
 
     const handleArtistSortPress = (e) => {
 		e.preventDefault();
@@ -11,12 +11,17 @@ function SortButtons({ sortReleaseMapByArtist, sortReleaseMapByAlbumTitle }) {
         e.preventDefault();
         sortReleaseMapByAlbumTitle();
     }
+    
+    const handleToastPress = (e) => {
+        e.preventDefault();
+        handleSpotifySubmit();
+    }
 
     return(
         <div className="btn-group">
             <button onClick={handleArtistSortPress}>Artist</button>
             <button onClick={handleAlbumTitleSortPress}>Album Title</button>
-            <button>Toast</button>
+            <button onClick={handleToastPress}>Toast</button>
         </div>
     )
 }

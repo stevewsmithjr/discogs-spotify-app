@@ -1,9 +1,8 @@
 import React from 'react';
 import DiscogsUserSearchForm from '../DiscogsUserSearchForm/DiscogsUserSearchForm';
 import ReleaseItemList from '../ReleaseItemList/ReleaseItemList';
-import SortButtons from '../SortButtons/SortButtons';
 
-function Main ({ handleUserSearchFormSubmit, handleReleaseClicked, sortReleaseMapByArtist, sortReleaseMapByAlbumTitle, releaseMap }) {
+function Main ({ autheticatedSpotifyToken, handleUserSearchFormSubmit, sortReleaseMapByArtist, sortReleaseMapByAlbumTitle, releaseMap }) {
   
   return (
     <main className="main">
@@ -11,8 +10,8 @@ function Main ({ handleUserSearchFormSubmit, handleReleaseClicked, sortReleaseMa
         Connect your Discogs account to view your collection
       </h2>
       <DiscogsUserSearchForm handleUserSearchFormSubmit={handleUserSearchFormSubmit} />
-      <SortButtons sortReleaseMapByArtist={sortReleaseMapByArtist} sortReleaseMapByAlbumTitle={sortReleaseMapByAlbumTitle} />
-      <ReleaseItemList handleReleaseClicked={handleReleaseClicked} releaseMap={releaseMap} />
+      <ReleaseItemList autheticatedSpotifyToken={autheticatedSpotifyToken} sortReleaseMapByArtist={sortReleaseMapByArtist} 
+        sortReleaseMapByAlbumTitle={sortReleaseMapByAlbumTitle} releaseMap={releaseMap} />
     </main>
   )
 
