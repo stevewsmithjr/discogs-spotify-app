@@ -21,7 +21,7 @@ function ReleaseItemList({ autheticatedSpotifyToken, sortReleaseMapByArtist, sor
         setSelectedReleaseMap(updatedReleaseMap);
     }, [selectedReleaseMap]);
 
-    const handleSpotifySubmit = () => {
+    const handleSpotifySearch = () => {
         const albumList = buildAlbumTitleAndArtistListFromMap(selectedReleaseMap);
         getSpotifySearchResultsFromAlbumTitleAndArtistList(autheticatedSpotifyToken, albumList)
             .then(result => console.log(result))
@@ -31,7 +31,7 @@ function ReleaseItemList({ autheticatedSpotifyToken, sortReleaseMapByArtist, sor
     return (
         <section className="releases">
             <SortButtons sortReleaseMapByArtist={sortReleaseMapByArtist} sortReleaseMapByAlbumTitle={sortReleaseMapByAlbumTitle} 
-                handleSpotifySubmit={handleSpotifySubmit} />
+                handleSpotifySearch={handleSpotifySearch} />
             <h3 className="releases__text">Your collection</h3>
             <ul className="releases__list">
                 {[...releaseMap.values()].map(

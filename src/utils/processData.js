@@ -21,7 +21,7 @@ function buildReleaseMapFromReleaseList(releaseList) {
 }
 
 function buildAlbumTitleAndArtistListFromMap(releaseMap) {
-    const titleList = [];
+    const albumList = [];
     const regex = /\(\d+\)/g;
     [...releaseMap.values()].forEach((release) => {
         let name = release.basic_information.artists[0].name;
@@ -29,13 +29,13 @@ function buildAlbumTitleAndArtistListFromMap(releaseMap) {
         if (found) {
             name = name.replace(found, '').trim();
         }
-        titleList.push({album: release.basic_information.title, artist: name});
+        albumList.push({album: release.basic_information.title, artist: name});
     });
-    return titleList;
+    return albumList;
 }
 
 function buildDiscogsReleasePageUrl (release) { 
     return `https://www.discogs.com/release/${release.id}`; 
 }
 
-export { buildReleaseMapFromPageList, buildDiscogsReleasePageUrl, buildReleaseMapFromReleaseList, buildAlbumTitleAndArtistListFromMap};
+export { buildReleaseMapFromPageList, buildDiscogsReleasePageUrl, buildReleaseMapFromReleaseList, buildAlbumTitleAndArtistListFromMap };
