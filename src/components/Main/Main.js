@@ -10,7 +10,7 @@ function Main ({ autheticatedSpotifyToken, handleUserSearchFormSubmit, sortRelea
         Connect your Discogs account to view your collection
       </h2>
       <DiscogsUserSearchForm handleUserSearchFormSubmit={handleUserSearchFormSubmit} />
-      <ReleaseItemList autheticatedSpotifyToken={autheticatedSpotifyToken} sortReleaseMapByArtist={sortReleaseMapByArtist} 
+      <ReleaseItemList sortReleaseMapByArtist={sortReleaseMapByArtist} 
         sortReleaseMapByAlbumTitle={sortReleaseMapByAlbumTitle} releaseMap={releaseMap} />
     </main>
   )

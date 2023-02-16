@@ -4,13 +4,13 @@ import Header from '../Header/Header';
 import Main from '../Main/Main';
 import Footer from '../Footer/Footer';
 import { buildReleaseMapFromPageList, buildReleaseMapFromReleaseList } from '../../utils/processData';
-import { getAuthenticatedSpotifyToken } from '../../utils/spotifyAPI';
+import { getAuthenticatedSpotifyTokenFromAPI } from '../../utils/spotifyAPI';
 import { getDiscogsUserFullCollection } from '../../utils/discogsAPI';
-
+import { setAuthenticatedSpotifyToken } from '../../utils/constants';
 function App() {
 	const [releaseMap, setReleaseMap] = useState(new Map());
     
-    const [autheticatedSpotifyToken, setAuthenticatedSpotifyToken] = useState('');
+    // const [autheticatedSpotifyToken, setAuthenticatedSpotifyToken] = useState('');
     
     const handleUserSearchFormSubmit = (input) => {
         getDiscogsUserFullCollection(input)
@@ -21,7 +21,7 @@ function App() {
             .catch((err) => {
                 console.log(err);
             });
-        getAuthenticatedSpotifyToken()
+        getAuthenticatedSpotifyTokenFromAPI()
             .then(token => {
                 setAuthenticatedSpotifyToken(token);
             })
@@ -73,7 +73,7 @@ function App() {
     return (
         <div className="App">
             <Header />
-            <Main autheticatedSpotifyToken={autheticatedSpotifyToken} handleUserSearchFormSubmit={handleUserSearchFormSubmit}
+            <Main handleUserSearchFormSubmit={handleUserSearchFormSubmit}
                 sortReleaseMapByArtist={sortReleaseMapByArtist} sortReleaseMapByAlbumTitle={sortReleaseMapByAlbumTitle} releaseMap={releaseMap} />
             <Footer />
         </div>

@@ -1,12 +1,11 @@
 import React, {useCallback, useState} from 'react'
 import ReleaseItem from '../ReleaseItem/ReleaseItem'
 import SortButtons from '../SortButtons/SortButtons';
-import { buildAlbumTitleAndArtistListFromMap } from '../../utils/processData';
-import { getSpotifySearchResultsFromAlbumTitleAndArtistList } from '../../utils/spotifyAPI';
-
+import { buildAlbumTitleAndArtistListFromMap, buildSpotifyTrackQueryStrings } from '../../utils/processData';
+import { getSpotifySearchResultsFromAlbumTitleAndArtistList, getSpotifyAlbumsFromIdList } from '../../utils/spotifyAPI';
 import './ReleaseItemList.css';
 
-function ReleaseItemList({ autheticatedSpotifyToken, sortReleaseMapByArtist, sortReleaseMapByAlbumTitle, releaseMap }) {
+function ReleaseItemList({ sortReleaseMapByArtist, sortReleaseMapByAlbumTitle, releaseMap }) {
     
     const [selectedReleaseMap, setSelectedReleaseMap] = useState(new Map());
     const handleReleaseItemClick = useCallback( (release) => {
@@ -17,15 +16,18 @@ function ReleaseItemList({ autheticatedSpotifyToken, sortReleaseMapByArtist, sor
         else {
             updatedReleaseMap.set(release.id, release);
         }
-        console.log('toast: ', updatedReleaseMap);
         setSelectedReleaseMap(updatedReleaseMap);
     }, [selectedReleaseMap]);
 
     const handleSpotifySearch = () => {
         const albumList = buildAlbumTitleAndArtistListFromMap(selectedReleaseMap);
-        getSpotifySearchResultsFromAlbumTitleAndArtistList(autheticatedSpotifyToken, albumList)
-            .then(result => console.log(result))
+        
+        getSpotifySearchResultsFromAlbumTitleAndArtistList(albumList)
+            .then(idList => getSpotifyAlbumsFromIdList(idList, albumList))
+            .then(albums =>  buildSpotifyTrackQueryStrings(albums)) 
+            .then(strings => console.log(strings))
             .catch(err => console.log(err));
+        
     }
 
     return (
@@ -37,8 +39,8 @@ function ReleaseItemList({ autheticatedSpotifyToken, sortReleaseMapByArtist, sor
                 {[...releaseMap.values()].map(
                     (release) => {
                         const isSelected = selectedReleaseMap.has(release.id);
-                        return <ReleaseItem release={ release } isSelected={isSelected} 
-                            handleReleaseItemClick={handleReleaseItemClick} key={ release.id }/>
+                        return <ReleaseItem release={ release } isSelected={ isSelected } 
+                            handleReleaseItemClick={ handleReleaseItemClick } key={ release.id } />
                     }
                 )}
             </ul>

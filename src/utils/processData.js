@@ -34,8 +34,29 @@ function buildAlbumTitleAndArtistListFromMap(releaseMap) {
     return albumList;
 }
 
+function buildSpotifyTrackQueryStrings(albums) {
+    const queryStrings = [];
+    let query = '';
+    let trackCount = 0;
+    albums.forEach(album => {
+        album.tracks.items.forEach(track => {
+            query = query.concat(`${track.id},`);
+            trackCount++;
+            if (trackCount % 100 === 0) {
+                query = query.slice(0, -1);
+                queryStrings.push(query);
+                query = '';
+            }
+        })
+    });
+    query = query.slice(0, -1);
+    queryStrings.push(query);
+    console.log(trackCount);
+    return queryStrings;
+}
+
 function buildDiscogsReleasePageUrl (release) { 
     return `https://www.discogs.com/release/${release.id}`; 
 }
 
-export { buildReleaseMapFromPageList, buildDiscogsReleasePageUrl, buildReleaseMapFromReleaseList, buildAlbumTitleAndArtistListFromMap };
+export { buildReleaseMapFromPageList, buildDiscogsReleasePageUrl, buildReleaseMapFromReleaseList, buildSpotifyTrackQueryStrings, buildAlbumTitleAndArtistListFromMap };

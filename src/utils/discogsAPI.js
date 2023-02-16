@@ -1,7 +1,6 @@
 const CONSTANTS = require('../utils/constants.js');
 
 async function getDiscogsUserCollectionByPage(usernameInput, pageNumber) {
-    console.log(pageNumber, usernameInput, CONSTANTS.DISCOGS_AUTH_HEADER);
     return await fetch(`https://api.discogs.com/users/${usernameInput}/collection/folders/0/releases?page=${pageNumber}`, {
         method: 'GET',
         headers: {
