@@ -42,6 +42,11 @@ async function getSpotifySearchResultsFromAlbumTitleAndArtistList(albumList) {
 
 async function getSpotifyAlbumsFromIdList(idList, albumList) {
     let albums = [];
+    /**
+     * TODO
+     * 
+     * This should be refactored! Spotify
+     */
     for (let i = 0; i < idList.length; i++) {
         const response = await fetch(`https://api.spotify.com/v1/albums/${idList[i]}/tracks`, {
             method: 'GET',
