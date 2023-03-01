@@ -44,8 +44,8 @@ async function getSpotifyAlbumsFromIdList(idList, albumList) {
     let albums = [];
     /**
      * TODO
-     * 
-     * This should be refactored! Spotify
+     * This should be refactored! Spotify has an enpoint where you can GET multiple albums.
+     * Just need to build the query string will all the album ids before hitting the endpoint.
      */
     for (let i = 0; i < idList.length; i++) {
         const response = await fetch(`https://api.spotify.com/v1/albums/${idList[i]}/tracks`, {
