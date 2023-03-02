@@ -1,8 +1,8 @@
 import React, {useCallback, useState} from 'react'
 import ReleaseItem from '../ReleaseItem/ReleaseItem'
 import SortButtons from '../SortButtons/SortButtons';
-import { buildAlbumTitleAndArtistListFromMap, buildSpotifyTrackQueryStrings } from '../../utils/processData';
-import { getSpotifySearchResultsFromAlbumTitleAndArtistList, getSpotifyAlbumsFromIdList } from '../../utils/spotifyAPI';
+import { buildAlbumTitleAndArtistListFromMap } from '../../utils/processData';
+import { getSpotifySearchResultsFromAlbumTitleAndArtistList, getSpotifyAlbumsFromIdList, getSpotifyAlbumTracks } from '../../utils/spotifyAPI';
 import './ReleaseItemList.css';
 
 function ReleaseItemList({ sortReleaseMapByArtist, sortReleaseMapByAlbumTitle, releaseMap }) {
@@ -23,9 +23,8 @@ function ReleaseItemList({ sortReleaseMapByArtist, sortReleaseMapByAlbumTitle, r
         const albumList = buildAlbumTitleAndArtistListFromMap(selectedReleaseMap);
         
         getSpotifySearchResultsFromAlbumTitleAndArtistList(albumList)
-            .then(idList => getSpotifyAlbumsFromIdList(idList, albumList))
-            .then(albums =>  buildSpotifyTrackQueryStrings(albums)) 
-            .then(strings => console.log(strings))
+            .then(idList => getSpotifyAlbumsFromIdList(idList))
+            .then(albums =>  getSpotifyAlbumTracks(albums))
             .catch(err => console.log(err));
         
     }

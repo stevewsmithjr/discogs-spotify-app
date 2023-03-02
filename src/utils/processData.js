@@ -42,16 +42,46 @@ function buildSpotifyTrackQueryStrings(albums) {
         album.tracks.items.forEach(track => {
             query = query.concat(`${track.id},`);
             trackCount++;
+            // Can only request for up to 100 tracks at a time
             if (trackCount % 100 === 0) {
+                
                 query = query.slice(0, -1);
                 queryStrings.push(query);
                 query = '';
             }
         })
     });
-    query = query.slice(0, -1);
-    queryStrings.push(query);
-    console.log(trackCount);
+
+    if (trackCount % 100 !== 0) {
+        query = query.slice(0, -1);
+        queryStrings.push(query);
+    }
+    console.log(`Query built to request ${trackCount} tracks.`);
+    return queryStrings;
+}
+
+function buildSpotifyAlbumQueryStrings(idList) {
+    const queryStrings = [];
+    let query = '';
+    let albumCount = 0;
+    console.log('size: ', idList.length);
+    idList.forEach(id => {
+        query = query.concat(`${id},`);
+        albumCount++;
+        // Can only request for up to 20 albums at a time
+        if (albumCount % 20 === 0) {
+            query = query.slice(0, -1);
+            queryStrings.push(query);
+            query = '';
+        }
+    });
+
+    if (albumCount % 20 !== 0) {
+        query = query.slice(0, -1);
+        queryStrings.push(query);
+    }
+    
+    console.log(`Query built to request ${albumCount} albums.`);
     return queryStrings;
 }
 
@@ -59,4 +89,4 @@ function buildDiscogsReleasePageUrl (release) {
     return `https://www.discogs.com/release/${release.id}`; 
 }
 
-export { buildReleaseMapFromPageList, buildDiscogsReleasePageUrl, buildReleaseMapFromReleaseList, buildSpotifyTrackQueryStrings, buildAlbumTitleAndArtistListFromMap };
+export { buildReleaseMapFromPageList, buildDiscogsReleasePageUrl, buildReleaseMapFromReleaseList, buildSpotifyAlbumQueryStrings, buildSpotifyTrackQueryStrings, buildAlbumTitleAndArtistListFromMap };

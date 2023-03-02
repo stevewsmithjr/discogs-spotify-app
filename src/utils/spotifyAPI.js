@@ -1,3 +1,5 @@
+import { buildSpotifyAlbumQueryStrings, buildSpotifyTrackQueryStrings } from './processData.js';
+
 const Buffer = require('buffer').Buffer;
 const CONSTANTS = require('../utils/constants.js');
 
@@ -40,22 +42,50 @@ async function getSpotifySearchResultsFromAlbumTitleAndArtistList(albumList) {
     return idList;
 }
 
-async function getSpotifyAlbumsFromIdList(idList, albumList) {
+async function getSpotifyAlbumsFromIdList(idList) {
     let albums = [];
-    /**
-     * TODO
-     * This should be refactored! Spotify has an enpoint where you can GET multiple albums.
-     * Just need to build the query string will all the album ids before hitting the endpoint.
-     */
-    for (let i = 0; i < idList.length; i++) {
-        const response = await fetch(`https://api.spotify.com/v1/albums/${idList[i]}/tracks`, {
+    const querys = buildSpotifyAlbumQueryStrings(idList);
+
+    for (let i = 0; i < querys.length; i++) {
+        const response = await fetch(`https://api.spotify.com/v1/albums?ids=${querys[i]}`, {
             method: 'GET',
-            headers: CONSTANTS.getAuthenticatedSpotifyHeader(),
+            headers: CONSTANTS.getAuthenticatedSpotifyHeader()
         });
         const data = await response.json();
-        albums.push({Album: albumList[i].album, tracks: data })
+        data.albums.forEach(album => albums.push(album));
     }
-
+    console.log('Spotify Albums returned:', albums);
     return albums;
 }
-export { getAuthenticatedSpotifyTokenFromAPI, getSpotifySearchResultsFromAlbumTitleAndArtistList, getSpotifyAlbumsFromIdList };
+
+async function getSpotifyAlbumTracks(albumList) {
+    let tracks = [];
+    const querys = buildSpotifyTrackQueryStrings(albumList);
+    for (let i = 0; i < querys.length; i++) {
+
+        const trackResponse = await fetch(`https://api.spotify.com/v1/tracks?ids=${querys[i]}`, {
+            method: 'GET',
+            headers: CONSTANTS.getAuthenticatedSpotifyHeader()
+        });
+        const trackData = await trackResponse.json();
+
+        const featureResponse = await fetch(`https://api.spotify.com/v1/audio-features?ids=${querys[i]}`, {
+            method: 'GET',
+            headers: CONSTANTS.getAuthenticatedSpotifyHeader()
+        });
+        const featureData = await featureResponse.json();
+        if (trackData.tracks.length === featureData.audio_features.length) {
+            for (let i = 0; i < trackData.tracks.length; i++) {
+                tracks.push({'track' : trackData.tracks[i], 'audio_features' : featureData.audio_features[i]});
+            }
+        }
+        else {
+            console.log('Response data arrays do not match in size.');
+            return;
+        }
+    }
+    console.log('Spotify Tracks returned: ', tracks);
+    return tracks;
+
+}
+export { getAuthenticatedSpotifyTokenFromAPI, getSpotifySearchResultsFromAlbumTitleAndArtistList, getSpotifyAlbumsFromIdList, getSpotifyAlbumTracks };
