@@ -85,8 +85,16 @@ function buildSpotifyAlbumQueryStrings(idList) {
     return queryStrings;
 }
 
+function buildTrackTempoMap(trackList) {
+    //const tempoMap = new Map();
+
+    trackList.forEach(track => {
+        console.log(`track name : ${track.track.name}\tbpm: ${track.audio_features.tempo}`);
+    })
+}
+
 function buildDiscogsReleasePageUrl (release) { 
     return `https://www.discogs.com/release/${release.id}`; 
 }
 
-export { buildReleaseMapFromPageList, buildDiscogsReleasePageUrl, buildReleaseMapFromReleaseList, buildSpotifyAlbumQueryStrings, buildSpotifyTrackQueryStrings, buildAlbumTitleAndArtistListFromMap };
+export { buildReleaseMapFromPageList, buildDiscogsReleasePageUrl, buildReleaseMapFromReleaseList, buildSpotifyAlbumQueryStrings, buildSpotifyTrackQueryStrings, buildAlbumTitleAndArtistListFromMap, buildTrackTempoMap };

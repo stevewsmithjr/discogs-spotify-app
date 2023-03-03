@@ -1,16 +1,18 @@
 import React, {useState} from 'react'
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import './App.css';
 import Header from '../Header/Header';
 import Main from '../Main/Main';
 import Footer from '../Footer/Footer';
+import SearchResults from '../SearchResults/SearchResults';
 import { buildReleaseMapFromPageList, buildReleaseMapFromReleaseList } from '../../utils/processData';
 import { getAuthenticatedSpotifyTokenFromAPI } from '../../utils/spotifyAPI';
 import { getDiscogsUserFullCollection } from '../../utils/discogsAPI';
 import { setAuthenticatedSpotifyToken } from '../../utils/constants';
 function App() {
 	const [releaseMap, setReleaseMap] = useState(new Map());
-    
-    // const [autheticatedSpotifyToken, setAuthenticatedSpotifyToken] = useState('');
+    const [spotifySearchResults, setSpotifySearchResults] = useState([]);
+    const navigate = useNavigate();
     
     const handleUserSearchFormSubmit = (input) => {
         getDiscogsUserFullCollection(input)
@@ -30,7 +32,11 @@ function App() {
             });
     }
 
-    
+    const handleSpotifySearch = (searchResults) => {
+        setSpotifySearchResults(searchResults);
+        navigate('/search_results');
+
+    }
 
     const sortReleaseMapByArtist = () => {
         const sortedReleaseList = [...releaseMap.values()];
@@ -69,12 +75,16 @@ function App() {
         const sortedReleaseMap = buildReleaseMapFromReleaseList(sortedReleaseList);
         setReleaseMap(sortedReleaseMap);
     }
- 
+
     return (
         <div className="App">
             <Header />
-            <Main handleUserSearchFormSubmit={handleUserSearchFormSubmit}
-                sortReleaseMapByArtist={sortReleaseMapByArtist} sortReleaseMapByAlbumTitle={sortReleaseMapByAlbumTitle} releaseMap={releaseMap} />
+            <Routes>
+                <Route path="/" element={<Main handleUserSearchFormSubmit={handleUserSearchFormSubmit} handleSpotifySearch={handleSpotifySearch}
+                    sortReleaseMapByArtist={sortReleaseMapByArtist} sortReleaseMapByAlbumTitle={sortReleaseMapByAlbumTitle} releaseMap={releaseMap} />} />
+                <Route path="/search_results" element={<SearchResults searchResults={spotifySearchResults} />}/>
+            </Routes>
+            
             <Footer />
         </div>
     );

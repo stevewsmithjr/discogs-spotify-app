@@ -76,7 +76,7 @@ async function getSpotifyAlbumTracks(albumList) {
         const featureData = await featureResponse.json();
         if (trackData.tracks.length === featureData.audio_features.length) {
             for (let i = 0; i < trackData.tracks.length; i++) {
-                tracks.push({'track' : trackData.tracks[i], 'audio_features' : featureData.audio_features[i]});
+                tracks.push({ ...trackData.tracks[i], ...featureData.audio_features[i]});
             }
         }
         else {

@@ -5,9 +5,10 @@ import { buildAlbumTitleAndArtistListFromMap } from '../../utils/processData';
 import { getSpotifySearchResultsFromAlbumTitleAndArtistList, getSpotifyAlbumsFromIdList, getSpotifyAlbumTracks } from '../../utils/spotifyAPI';
 import './ReleaseItemList.css';
 
-function ReleaseItemList({ sortReleaseMapByArtist, sortReleaseMapByAlbumTitle, releaseMap }) {
+function ReleaseItemList({ handleSpotifySearch, sortReleaseMapByArtist, sortReleaseMapByAlbumTitle, releaseMap }) {
     
     const [selectedReleaseMap, setSelectedReleaseMap] = useState(new Map());
+
     const handleReleaseItemClick = useCallback( (release) => {
         const updatedReleaseMap = new Map(selectedReleaseMap);
         if (updatedReleaseMap.has(release.id)) {
@@ -19,20 +20,20 @@ function ReleaseItemList({ sortReleaseMapByArtist, sortReleaseMapByAlbumTitle, r
         setSelectedReleaseMap(updatedReleaseMap);
     }, [selectedReleaseMap]);
 
-    const handleSpotifySearch = () => {
+    const onSpotifySearch = async () => {
         const albumList = buildAlbumTitleAndArtistListFromMap(selectedReleaseMap);
-        
-        getSpotifySearchResultsFromAlbumTitleAndArtistList(albumList)
+        const searchResults = await getSpotifySearchResultsFromAlbumTitleAndArtistList(albumList)
             .then(idList => getSpotifyAlbumsFromIdList(idList))
             .then(albums =>  getSpotifyAlbumTracks(albums))
+            .then(results => results)
             .catch(err => console.log(err));
-        
+        handleSpotifySearch(searchResults);
     }
 
     return (
         <section className="releases">
             <SortButtons sortReleaseMapByArtist={sortReleaseMapByArtist} sortReleaseMapByAlbumTitle={sortReleaseMapByAlbumTitle} 
-                handleSpotifySearch={handleSpotifySearch} />
+                handleSpotifySearch={onSpotifySearch} />
             <h3 className="releases__text">Your collection</h3>
             <ul className="releases__list">
                 {[...releaseMap.values()].map(
