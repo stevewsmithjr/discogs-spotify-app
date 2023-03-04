@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import './DiscogsUserSeachForm.css';
+import './DiscogsUserSearchForm.css';
 
-function DiscogsUserSeachForm({ handleUserSearchFormSubmit }) {
+function DiscogsUserSearchForm({ handleUserSearchFormSubmit }) {
 	const [username, setUsername] = useState('');
 
 	const handleUsernameChange = (e) => {
@@ -38,4 +38,4 @@ function DiscogsUserSeachForm({ handleUserSearchFormSubmit }) {
 
 }
 
-export default DiscogsUserSeachForm;
+export default DiscogsUserSearchForm;

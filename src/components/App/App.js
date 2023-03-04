@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import './App.css';
 import Header from '../Header/Header';
-import DiscogsUserSeachForm from '../DiscogsUserSeachForm/DiscogsUserSeachForm';
+import DiscogsUserSearchForm from '../DiscogsUserSearchForm/DiscogsUserSearchForm';
 import Footer from '../Footer/Footer';
 import SpotifyAlbumList from '../SpotifyAlbumList/SpotifyAlbumList'
 import SpotifyDataGrid from '../SpotifyDataGrid/SpotifyDataGrid';
@@ -39,7 +39,7 @@ function App() {
             <Routes>
                 <Route  
                     path="/"                 
-                    element={<DiscogsUserSeachForm handleUserSearchFormSubmit={handleUserSearchFormSubmit}/>}
+                    element={<DiscogsUserSearchForm handleUserSearchFormSubmit={handleUserSearchFormSubmit}/>}
                 />
                 <Route 
                     path="/spotify_albums" 
