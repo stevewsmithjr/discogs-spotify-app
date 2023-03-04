@@ -1,0 +1,9 @@
+.container {
+    height: 640px;
+    display: flex;
+    flex-direction: column;
+}
+
+.cell {
+    background-color: blue;
+}

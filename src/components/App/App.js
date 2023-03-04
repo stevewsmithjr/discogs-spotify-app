@@ -2,87 +2,53 @@ import React, {useState} from 'react'
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import './App.css';
 import Header from '../Header/Header';
-import Main from '../Main/Main';
+import DiscogsUserSeachForm from '../DiscogsUserSeachForm/DiscogsUserSeachForm';
 import Footer from '../Footer/Footer';
-import SearchResults from '../SearchResults/SearchResults';
-import { buildReleaseMapFromPageList, buildReleaseMapFromReleaseList } from '../../utils/processData';
-import { getAuthenticatedSpotifyTokenFromAPI } from '../../utils/spotifyAPI';
-import { getDiscogsUserFullCollection } from '../../utils/discogsAPI';
+import SpotifyAlbumList from '../SpotifyAlbumList/SpotifyAlbumList'
+import SpotifyDataGrid from '../SpotifyDataGrid/SpotifyDataGrid';
+import {  } from '../../utils/processData';
+import { getAuthenticatedSpotifyTokenFromAPI, getSpotifyAlbumsFromDiscogsUserCollection } from '../../utils/spotifyAPI';
+import {  } from '../../utils/discogsAPI';
 import { setAuthenticatedSpotifyToken } from '../../utils/constants';
+
 function App() {
-	const [releaseMap, setReleaseMap] = useState(new Map());
-    const [spotifySearchResults, setSpotifySearchResults] = useState([]);
+
+    const [spotifyAlbums, setSpotifyAlbums] = useState([]);
+    const [spotifyGridData, setSpotifyGridData] = useState([]);
     const navigate = useNavigate();
     
-    const handleUserSearchFormSubmit = (input) => {
-        getDiscogsUserFullCollection(input)
-            .then(pageList => {
-                const releaseMap = buildReleaseMapFromPageList(pageList);
-			    setReleaseMap(releaseMap);
-		    })
-            .catch((err) => {
-                console.log(err);
-            });
-        getAuthenticatedSpotifyTokenFromAPI()
-            .then(token => {
-                setAuthenticatedSpotifyToken(token);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+    const handleUserSearchFormSubmit = async (usernameInput) => {
+        await getAuthenticatedSpotifyTokenFromAPI()
+            .then(token => setAuthenticatedSpotifyToken(token))
+            .catch(err => console.log(err));
+
+        const yourAlbums = await getSpotifyAlbumsFromDiscogsUserCollection(usernameInput);
+        setSpotifyAlbums(yourAlbums);
+        navigate('/spotify_albums');
     }
 
-    const handleSpotifySearch = (searchResults) => {
-        setSpotifySearchResults(searchResults);
-        navigate('/search_results');
-
-    }
-
-    const sortReleaseMapByArtist = () => {
-        const sortedReleaseList = [...releaseMap.values()];
-        sortedReleaseList.sort((releaseA, releaseB) => {
-            const nameA = releaseA.basic_information.artists[0].name.toLowerCase();
-            const nameB = releaseB.basic_information.artists[0].name.toLowerCase();
-            if (nameA < nameB) {
-                return -1;
-            }
-            else if (nameA > nameB) {
-                return 1;
-            }
-            else {
-                return 0;
-            }
-        });
-        const sortedReleaseMap = buildReleaseMapFromReleaseList(sortedReleaseList);
-        setReleaseMap(sortedReleaseMap);
-    }
-
-    const sortReleaseMapByAlbumTitle = () => {
-        const sortedReleaseList = [...releaseMap.values()];
-        sortedReleaseList.sort((releaseA, releaseB) => {
-            const nameA = releaseA.basic_information.title.toLowerCase();
-            const nameB = releaseB.basic_information.title.toLowerCase();
-            if (nameA < nameB) {
-                return -1;
-            }
-            else if (nameA > nameB) {
-                return 1;
-            }
-            else {
-                return 0;
-            }
-        });
-        const sortedReleaseMap = buildReleaseMapFromReleaseList(sortedReleaseList);
-        setReleaseMap(sortedReleaseMap);
-    }
+    const handleFetchSpotifyAlbumTracks = (albums) => {
+        // const gridData = extractGridDataFromSearchResults(searchResults);
+        // setSpotifyGridData(gridData);
+        // navigate('/search_results');
+    }   
 
     return (
         <div className="App">
             <Header />
             <Routes>
-                <Route path="/" element={<Main handleUserSearchFormSubmit={handleUserSearchFormSubmit} handleSpotifySearch={handleSpotifySearch}
-                    sortReleaseMapByArtist={sortReleaseMapByArtist} sortReleaseMapByAlbumTitle={sortReleaseMapByAlbumTitle} releaseMap={releaseMap} />} />
-                <Route path="/search_results" element={<SearchResults searchResults={spotifySearchResults} />}/>
+                <Route  
+                    path="/"                 
+                    element={<DiscogsUserSeachForm handleUserSearchFormSubmit={handleUserSearchFormSubmit}/>}
+                />
+                <Route 
+                    path="/spotify_albums" 
+                    element={<SpotifyAlbumList albums={spotifyAlbums}/>}
+                />
+                <Route 
+                    path="/search_results"
+                    element={<SpotifyDataGrid gridData={spotifyGridData} />}
+                />
             </Routes>
             
             <Footer />

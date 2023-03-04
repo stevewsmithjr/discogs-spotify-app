@@ -1,8 +1,8 @@
-import { buildSpotifyAlbumQueryStrings, buildSpotifyTrackQueryStrings } from './processData.js';
+import { buildAlbumTitleAndArtistListFromMap, buildReleaseMapFromPageList, buildSpotifyAlbumQueryStrings, buildSpotifyTrackQueryStrings, removeDuplicateSpotifyAlbums } from './processData.js';
+import { getDiscogsUserFullCollection } from './discogsAPI';
 
 const Buffer = require('buffer').Buffer;
 const CONSTANTS = require('../utils/constants.js');
-
 
 async function getAuthenticatedSpotifyTokenFromAPI() {
     const encodedSpotifyCredentials = new Buffer.from(`${CONSTANTS.SPOTIFY_CLIENT_ID}:${CONSTANTS.SPOTIFY_CLIENT_SECRET}`).toString('base64');
@@ -15,23 +15,23 @@ async function getAuthenticatedSpotifyTokenFromAPI() {
         body: 'grant_type=client_credentials'
     });
     const { access_token } = await response.json();
-    return access_token; 
+    return access_token;
 }
 
-async function getSpotifySearchResultsFromAlbumTitleAndArtistList(albumList) {
+async function getSpotifyIdsFromAlbumListSearch(albumList) {
     let idList = [];
     for (let i = 0; i < albumList.length; i++) {
         const response = await fetch(`https://api.spotify.com/v1/search?q=${albumList[i].album}&type=album`, {
             method: 'GET',
-            headers: CONSTANTS.getAuthenticatedSpotifyHeader(),            
+            headers: CONSTANTS.getAuthenticatedSpotifyHeader(),
         });
 
         const data = await response.json();
+
         let j = 0;
         const searchArtist = `${albumList[i].artist}`.toLowerCase();
-
         while (j < data.albums.items.length) {
-            let resultArtist = `${data.albums.items[j].artists[0].name}`.toLowerCase();
+            let resultArtist = `${data.albums.items[j].artists[0].name}`.replace('&', 'and').toLowerCase();
             if (searchArtist.localeCompare(resultArtist) === 0) {
                 idList.push(data.albums.items[j].id);
                 break;
@@ -68,16 +68,15 @@ async function getSpotifyAlbumTracks(albumList) {
             headers: CONSTANTS.getAuthenticatedSpotifyHeader()
         });
         const trackData = await trackResponse.json();
-
         const featureResponse = await fetch(`https://api.spotify.com/v1/audio-features?ids=${querys[i]}`, {
             method: 'GET',
             headers: CONSTANTS.getAuthenticatedSpotifyHeader()
         });
         const featureData = await featureResponse.json();
         if (trackData.tracks.length === featureData.audio_features.length) {
-            for (let i = 0; i < trackData.tracks.length; i++) {
-                tracks.push({ ...trackData.tracks[i], ...featureData.audio_features[i]});
-            }
+            trackData.tracks.forEach((track, idx) => {
+                tracks.push({ ...track, ...featureData.audio_features[idx] })
+            });
         }
         else {
             console.log('Response data arrays do not match in size.');
@@ -88,4 +87,16 @@ async function getSpotifyAlbumTracks(albumList) {
     return tracks;
 
 }
-export { getAuthenticatedSpotifyTokenFromAPI, getSpotifySearchResultsFromAlbumTitleAndArtistList, getSpotifyAlbumsFromIdList, getSpotifyAlbumTracks };
+
+async function getSpotifyAlbumsFromDiscogsUserCollection(username) {
+
+    const discogsAlbums = await getDiscogsUserFullCollection(username)
+        .then(pageList => buildReleaseMapFromPageList(pageList))
+        .then(discogsReleaseMap => buildAlbumTitleAndArtistListFromMap(discogsReleaseMap));
+    const idList = await getSpotifyIdsFromAlbumListSearch(discogsAlbums);
+    const albums = await getSpotifyAlbumsFromIdList(idList)
+        .then(spotifyAlbums => removeDuplicateSpotifyAlbums(spotifyAlbums));
+    return albums;
+}
+
+export { getAuthenticatedSpotifyTokenFromAPI, getSpotifyIdsFromAlbumListSearch, getSpotifyAlbumsFromIdList, getSpotifyAlbumTracks, getSpotifyAlbumsFromDiscogsUserCollection };

@@ -1,0 +1,49 @@
+a {
+    display: block;
+    background-color: transparent;
+    height: 300px;
+    width: 300px;
+  }
+  
+  .card {
+    height: 440px;
+    width: 300px;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 19px;
+    box-sizing: border-box;
+    list-style: none;
+  }
+  
+  .card-selected {
+    height: 440px;
+    width: 300px;
+    overflow: hidden;
+    border: 5px solid rgba(0, 0, 0, 0.3);
+    border-radius: 19px;
+    box-sizing: border-box;
+    list-style: none;
+  }
+  
+  .card__image {
+    height: 300px;
+    width: 100%;
+    top: 0;
+    object-fit: cover;
+  }
+  
+  .card__bottom {
+    background-color: #fff;
+    height: 140px;
+    display: flex;
+    flex-direction: column;
+    padding-left: 12px;
+  }
+  
+  .card__bottom-album {
+    font-size: 24px;
+    max-height: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
