@@ -8,7 +8,6 @@ import './SpotifyDataGrid.css';
 
 const SpotifyDataGrid = ({ gridData }) => {
 
-    const gridRef = useRef();
     const [rowData, setRowData] = useState(gridData); // Set rowData to Array of Objects, one Object per Row
     const [columnDefs, setColumnDefs] = useState([
         { headerName: 'Name', field: 'name' },
@@ -29,14 +28,18 @@ const SpotifyDataGrid = ({ gridData }) => {
 
     const handleReturnButtonClick = (e) => {
         e.preventDefault();
-        navigate('/');
+        navigate('/spotify_albums');
     }
 
     const gridOptions = {
         defaultColDef: defaultColDef,
         columnDefs: columnDefs,
+        pagination: true,
+        paginationPageSize: 100,
         rowSelection: 'multiple',
-        ref: gridRef,
+        onGridReady: (params) => {
+            params.api.sizeColumnsToFit();
+        },
     };
 
     return (

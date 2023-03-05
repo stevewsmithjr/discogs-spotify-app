@@ -6,8 +6,8 @@ import DiscogsUserSearchForm from '../DiscogsUserSearchForm/DiscogsUserSearchFor
 import Footer from '../Footer/Footer';
 import SpotifyAlbumList from '../SpotifyAlbumList/SpotifyAlbumList'
 import SpotifyDataGrid from '../SpotifyDataGrid/SpotifyDataGrid';
-import {  } from '../../utils/processData';
-import { getAuthenticatedSpotifyTokenFromAPI, getSpotifyAlbumsFromDiscogsUserCollection } from '../../utils/spotifyAPI';
+import { extractGridDataFromTrackList } from '../../utils/processData';
+import { getAuthenticatedSpotifyTokenFromAPI, getSpotifyAlbumsFromDiscogsUserCollection, getSpotifyAlbumTracks } from '../../utils/spotifyAPI';
 import {  } from '../../utils/discogsAPI';
 import { setAuthenticatedSpotifyToken } from '../../utils/constants';
 
@@ -27,10 +27,12 @@ function App() {
         navigate('/spotify_albums');
     }
 
-    const handleFetchSpotifyAlbumTracks = (albums) => {
-        // const gridData = extractGridDataFromSearchResults(searchResults);
-        // setSpotifyGridData(gridData);
-        // navigate('/search_results');
+    const handleSpotifyDataGridNavigate = async (albumMap) => {
+        console.log(albumMap);
+        const trackList = await getSpotifyAlbumTracks([...albumMap.values()]);
+        const gridData = extractGridDataFromTrackList(trackList);
+        setSpotifyGridData(gridData);
+        navigate('/search_results');
     }   
 
     return (
@@ -43,7 +45,7 @@ function App() {
                 />
                 <Route 
                     path="/spotify_albums" 
-                    element={<SpotifyAlbumList albums={spotifyAlbums}/>}
+                    element={<SpotifyAlbumList albums={spotifyAlbums} handleSpotifyDataGridNavigate={handleSpotifyDataGridNavigate}/>}
                 />
                 <Route 
                     path="/search_results"

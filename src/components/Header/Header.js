@@ -1,7 +1,14 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Header.css';
 
 function Header() {
+  
+  const navigate = useNavigate();
+  
+  function handleSearchClick() {
+    navigate('/');
+  }
 
   return (
     <header className="header">
@@ -12,7 +19,7 @@ function Header() {
         <h1 className="header__title">Discogify</h1>
       </div>
       <div className="header__right">
-        <h3 className="header__about">About</h3>
+        <button onClick={handleSearchClick}><h3 className="header__about">User Search</h3></button>
       </div>
     </header>
   )

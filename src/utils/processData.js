@@ -21,6 +21,8 @@ function buildReleaseMapFromReleaseList(releaseList) {
 }
 
 function buildAlbumTitleAndArtistListFromMap(releaseMap) {
+    // This funciton removes the numbers in parenthesis from Discogs Artists' names
+    // ex: Pond (5) => Pond
     const albumList = [];
     const regex = /\(\d+\)/g;
     [...releaseMap.values()].forEach((release) => {
@@ -91,9 +93,9 @@ function buildTrackTempoMap(trackList) {
     });
 }
 
-function extractGridDataFromSearchResults(searchResults) {
+function extractGridDataFromTrackList(trackList) {
     const gridData = [];
-    searchResults.forEach((track) => {
+    trackList.forEach((track) => {
 
         gridData.push({
             acousticness: track.acousticness,
@@ -135,11 +137,15 @@ function flattenSpotifyAlbumData(albums) {
     const flatData = [];
 
     albums.forEach((album) => {
+        let artistString = '';
+        album.artists.forEach(artist => artistString = artistString.concat(' ', artist.name))
+  
         flatData.push({
             id: album.id,
             name: album.name,
-            artist: [...album.artists.map(artist => artist.name)],
+            artist: artistString,
             images: [...album.images.map(image => image.url)],
+            albumData: album
         });
     });
 
@@ -164,6 +170,25 @@ function removeDuplicateSpotifyAlbums(albums) {
     return albums;
 }
 
+function trimStringForSearch(string) {
+
+    let trimmedString = string;
+
+    const removeRegex = /\((.*?)\)/g;
+    const substringsToReplace = {
+        '&': 'and'
+    };
+    const replaceRegex = new RegExp(Object.keys(substringsToReplace).join('|'), 'gi');
+    
+    trimmedString = trimmedString.replace(removeRegex, '');
+    trimmedString = trimmedString.replace(replaceRegex, (match) => substringsToReplace[match.toLowerCase()] );
+    trimmedString = trimmedString.trim().toLowerCase();
+
+    // console.log('Trimmed \''+string+'\' to \''+trimmedString+'\'.');
+    
+    return trimmedString;
+}
+
 // const sortReleaseMapByAlbumTitle = () => {
 //     const sortedReleaseList = [...discogsReleaseMap.values()];
 //     sortedReleaseList.sort((releaseA, releaseB) => {
@@ -185,5 +210,6 @@ function removeDuplicateSpotifyAlbums(albums) {
 export {
     buildReleaseMapFromPageList, buildDiscogsReleasePageUrl, buildReleaseMapFromReleaseList,
     buildSpotifyAlbumQueryStrings, buildSpotifyTrackQueryStrings, buildAlbumTitleAndArtistListFromMap,
-    buildTrackTempoMap, extractGridDataFromSearchResults, removeDuplicateSpotifyAlbums, flattenSpotifyAlbumData
+    buildTrackTempoMap, extractGridDataFromTrackList, removeDuplicateSpotifyAlbums, flattenSpotifyAlbumData,
+    trimStringForSearch
 };

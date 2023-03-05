@@ -3,7 +3,7 @@ import SpotifyAlbumItem from '../SpotifyAlbumItem/SpotifyAlbumItem';
 import {flattenSpotifyAlbumData} from '../../utils/processData';
 import './SpotifyAlbumList.css';
 
-function SpotifyAlbumList({ albums }) {
+function SpotifyAlbumList({ albums, handleSpotifyDataGridNavigate }) {
 
     const [albumList, setAlbumList] = useState(flattenSpotifyAlbumData(albums))
     const [selectedAlbums, setSelectedAlbums] = useState(new Map());
@@ -14,14 +14,19 @@ function SpotifyAlbumList({ albums }) {
             updatedAlbumMap.delete(album.id);
         }
         else {
-            updatedAlbumMap.set(album.id, album);
+            updatedAlbumMap.set(album.id, album.albumData);
         }
         setSelectedAlbums(updatedAlbumMap);
+        console.log(selectedAlbums);
     }, [selectedAlbums]);
+
+    const handleDataGridButtonClick = () => {
+        handleSpotifyDataGridNavigate(selectedAlbums);
+    }
 
     return (
         <section className="albums">
-            <button>Data Grid</button>
+            <button onClick={handleDataGridButtonClick}>Data Grid</button>
             <h3 className="albums__text">Your collection</h3>
             <ul className="albums__list">
                 {albumList.map(

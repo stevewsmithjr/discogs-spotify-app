@@ -1,4 +1,7 @@
-import { buildAlbumTitleAndArtistListFromMap, buildReleaseMapFromPageList, buildSpotifyAlbumQueryStrings, buildSpotifyTrackQueryStrings, removeDuplicateSpotifyAlbums } from './processData.js';
+import {
+    buildAlbumTitleAndArtistListFromMap, buildReleaseMapFromPageList,
+    buildSpotifyAlbumQueryStrings, buildSpotifyTrackQueryStrings, removeDuplicateSpotifyAlbums, trimStringForSearch
+} from './processData.js';
 import { getDiscogsUserFullCollection } from './discogsAPI';
 
 const Buffer = require('buffer').Buffer;
@@ -20,25 +23,45 @@ async function getAuthenticatedSpotifyTokenFromAPI() {
 
 async function getSpotifyIdsFromAlbumListSearch(albumList) {
     let idList = [];
+    let noMatch = [];
     for (let i = 0; i < albumList.length; i++) {
-        const response = await fetch(`https://api.spotify.com/v1/search?q=${albumList[i].album}&type=album`, {
+        const searchAlbum = trimStringForSearch(albumList[i].album);
+        const response = await fetch(`https://api.spotify.com/v1/search?q=${searchAlbum}&type=album`, {
             method: 'GET',
             headers: CONSTANTS.getAuthenticatedSpotifyHeader(),
         });
 
         const data = await response.json();
-
+        const searchArtist = trimStringForSearch(albumList[i].artist);
         let j = 0;
-        const searchArtist = `${albumList[i].artist}`.toLowerCase();
+
         while (j < data.albums.items.length) {
-            let resultArtist = `${data.albums.items[j].artists[0].name}`.replace('&', 'and').toLowerCase();
-            if (searchArtist.localeCompare(resultArtist) === 0) {
+            let artistFound = false;
+            const resultArtists = data.albums.items[j].artists;
+            const resultAlbum = trimStringForSearch(data.albums.items[j].name);
+            for (let k = 0; k < resultArtists.length; k++) {
+                const resultArtist = trimStringForSearch(resultArtists[k].name);
+                if (searchArtist.localeCompare(resultArtist) === 0) {
+                    artistFound = true;
+                    break;
+                }
+            }
+            if (artistFound && searchAlbum.localeCompare(resultAlbum) === 0) {
                 idList.push(data.albums.items[j].id);
                 break;
             }
             j++;
         }
+
+        if (j === data.albums.items.length) {
+            noMatch.push({
+                album: searchAlbum,
+                artist: searchArtist,
+                data: data
+            });
+        }
     }
+    console.log('No matches: ', noMatch);
     return idList;
 }
 
@@ -97,6 +120,7 @@ async function getSpotifyAlbumsFromDiscogsUserCollection(username) {
     const albums = await getSpotifyAlbumsFromIdList(idList)
         .then(spotifyAlbums => removeDuplicateSpotifyAlbums(spotifyAlbums));
     return albums;
+
 }
 
 export { getAuthenticatedSpotifyTokenFromAPI, getSpotifyIdsFromAlbumListSearch, getSpotifyAlbumsFromIdList, getSpotifyAlbumTracks, getSpotifyAlbumsFromDiscogsUserCollection };

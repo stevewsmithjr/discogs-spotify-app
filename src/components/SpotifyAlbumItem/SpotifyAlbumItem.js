@@ -6,7 +6,7 @@ function SpotifyAlbumItem({ album, isSelected, handleAlbumItemClick }) {
         <li className={isSelected ? 'card-selected' : 'card'} onClick={() => handleAlbumItemClick(album)}>
             <img src={album.images[0]} alt='Album cover' className="card__image" />
             <h3 className="card__title" >{album.name}</h3>
-            <p className="card__bottom-artist">{[...album.artist]}</p>
+            <p className="card__bottom-artist">{album.artist}</p>
         </li>
     )
 }
