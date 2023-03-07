@@ -31,7 +31,7 @@ function buildAlbumTitleAndArtistListFromMap(releaseMap) {
         if (found) {
             name = name.replace(found, '').trim();
         }
-        albumList.push({ album: release.basic_information.title.replace('&', 'and').trim(), artist: name });
+        albumList.push({ album: release.basic_information.title.replace('&', 'and').trim(), artist: name, genres: release.basic_information.genres });
     });
     return albumList;
 }
@@ -135,7 +135,7 @@ function extractGridDataFromTrackList(trackList) {
 
 function flattenSpotifyAlbumData(albums) {
     const flatData = [];
-
+    console.log('rendered spotify album list');
     albums.forEach((album) => {
         let artistString = '';
         album.artists.forEach(artist => artistString = artistString.concat(' ', artist.name))
@@ -207,9 +207,39 @@ function trimStringForSearch(string) {
 //     const sortedReleaseMap = buildReleaseMapFromReleaseList(sortedReleaseList);
 // }
 
+function applyDiscogsGenreData(idMap, spotifyAlbums) {
+
+    const updatedAlbums = [];
+    spotifyAlbums.forEach((album) => {
+        let tempAlbum = album;
+        tempAlbum.genres = idMap.get(tempAlbum.id);
+        updatedAlbums.push(tempAlbum);
+    })
+
+    return updatedAlbums;
+}
+
+function extractGenresFromAlbums(albums) {
+    
+    const genreMap = new Map();
+    albums.forEach((album) => {
+        album.albumData.genres.forEach((genre) => {
+            if (genreMap.has(genre)) {
+                genreMap.set(genre, [...genreMap.get(genre), album]);
+            }
+            else {
+                genreMap.set(genre, [album]);
+            }
+            
+        });
+    });
+
+    return genreMap
+}
+
 export {
     buildReleaseMapFromPageList, buildDiscogsReleasePageUrl, buildReleaseMapFromReleaseList,
     buildSpotifyAlbumQueryStrings, buildSpotifyTrackQueryStrings, buildAlbumTitleAndArtistListFromMap,
     buildTrackTempoMap, extractGridDataFromTrackList, removeDuplicateSpotifyAlbums, flattenSpotifyAlbumData,
-    trimStringForSearch
+    trimStringForSearch, applyDiscogsGenreData, extractGenresFromAlbums
 };

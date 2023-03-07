@@ -1,6 +1,7 @@
 import {
     buildAlbumTitleAndArtistListFromMap, buildReleaseMapFromPageList,
-    buildSpotifyAlbumQueryStrings, buildSpotifyTrackQueryStrings, removeDuplicateSpotifyAlbums, trimStringForSearch
+    buildSpotifyAlbumQueryStrings, buildSpotifyTrackQueryStrings, removeDuplicateSpotifyAlbums, 
+    trimStringForSearch, applyDiscogsGenreData
 } from './processData.js';
 import { getDiscogsUserFullCollection } from './discogsAPI';
 
@@ -22,8 +23,9 @@ async function getAuthenticatedSpotifyTokenFromAPI() {
 }
 
 async function getSpotifyIdsFromAlbumListSearch(albumList) {
-    let idList = [];
+    const idMap = new Map();
     let noMatch = [];
+    
     for (let i = 0; i < albumList.length; i++) {
         const searchAlbum = trimStringForSearch(albumList[i].album);
         const response = await fetch(`https://api.spotify.com/v1/search?q=${searchAlbum}&type=album`, {
@@ -47,7 +49,7 @@ async function getSpotifyIdsFromAlbumListSearch(albumList) {
                 }
             }
             if (artistFound && searchAlbum.localeCompare(resultAlbum) === 0) {
-                idList.push(data.albums.items[j].id);
+                idMap.set(data.albums.items[j].id, albumList[i].genres);
                 break;
             }
             j++;
@@ -62,12 +64,12 @@ async function getSpotifyIdsFromAlbumListSearch(albumList) {
         }
     }
     console.log('No matches: ', noMatch);
-    return idList;
+    return idMap;
 }
 
-async function getSpotifyAlbumsFromIdList(idList) {
+async function getSpotifyAlbumsFromIdMap(idMap) {
     let albums = [];
-    const querys = buildSpotifyAlbumQueryStrings(idList);
+    const querys = buildSpotifyAlbumQueryStrings([...idMap.keys()]);
 
     for (let i = 0; i < querys.length; i++) {
         const response = await fetch(`https://api.spotify.com/v1/albums?ids=${querys[i]}`, {
@@ -116,11 +118,12 @@ async function getSpotifyAlbumsFromDiscogsUserCollection(username) {
     const discogsAlbums = await getDiscogsUserFullCollection(username)
         .then(pageList => buildReleaseMapFromPageList(pageList))
         .then(discogsReleaseMap => buildAlbumTitleAndArtistListFromMap(discogsReleaseMap));
-    const idList = await getSpotifyIdsFromAlbumListSearch(discogsAlbums);
-    const albums = await getSpotifyAlbumsFromIdList(idList)
+    const idMap = await getSpotifyIdsFromAlbumListSearch(discogsAlbums);
+    const albums = await getSpotifyAlbumsFromIdMap(idMap)
+        .then(spotifyAlbums => applyDiscogsGenreData(idMap, spotifyAlbums))
         .then(spotifyAlbums => removeDuplicateSpotifyAlbums(spotifyAlbums));
     return albums;
 
 }
 
-export { getAuthenticatedSpotifyTokenFromAPI, getSpotifyIdsFromAlbumListSearch, getSpotifyAlbumsFromIdList, getSpotifyAlbumTracks, getSpotifyAlbumsFromDiscogsUserCollection };
+export { getAuthenticatedSpotifyTokenFromAPI, getSpotifyIdsFromAlbumListSearch, getSpotifyAlbumsFromIdMap, getSpotifyAlbumTracks, getSpotifyAlbumsFromDiscogsUserCollection };

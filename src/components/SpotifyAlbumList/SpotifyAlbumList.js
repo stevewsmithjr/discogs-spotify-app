@@ -1,11 +1,14 @@
 import React, {useCallback, useState} from 'react';
 import SpotifyAlbumItem from '../SpotifyAlbumItem/SpotifyAlbumItem';
-import {flattenSpotifyAlbumData} from '../../utils/processData';
+import {flattenSpotifyAlbumData, extractGenresFromAlbums} from '../../utils/processData';
 import './SpotifyAlbumList.css';
+import AlbumListByGenre from '../AlbumListByGenre/AlbumListByGenre';
 
 function SpotifyAlbumList({ albums, handleSpotifyDataGridNavigate }) {
 
-    const [albumList, setAlbumList] = useState(flattenSpotifyAlbumData(albums))
+    
+    const [albumList, setAlbumList] = useState(flattenSpotifyAlbumData(albums));
+    const [genreBuckets, setGenreBuckets] = useState(extractGenresFromAlbums(flattenSpotifyAlbumData(albums)));
     const [selectedAlbums, setSelectedAlbums] = useState(new Map());
     
     const handleAlbumItemClick = useCallback( (album) => {
@@ -17,26 +20,41 @@ function SpotifyAlbumList({ albums, handleSpotifyDataGridNavigate }) {
             updatedAlbumMap.set(album.id, album.albumData);
         }
         setSelectedAlbums(updatedAlbumMap);
-        console.log(selectedAlbums);
+        console.log(updatedAlbumMap);
     }, [selectedAlbums]);
 
     const handleDataGridButtonClick = () => {
         handleSpotifyDataGridNavigate(selectedAlbums);
     }
 
+    const testButtonClick = (e) => {
+        e.preventDefault();
+        console.log(genreBuckets);
+    }
+
     return (
         <section className="albums">
             <button onClick={handleDataGridButtonClick}>Data Grid</button>
+            <button onClick={testButtonClick}>Test</button>
             <h3 className="albums__text">Your collection</h3>
-            <ul className="albums__list">
-                {albumList.map(
-                    (album) => {
-                        const isSelected = selectedAlbums.has(album.id);
-                        return <SpotifyAlbumItem album={ album } isSelected={ isSelected } 
-                        handleAlbumItemClick={ handleAlbumItemClick } key={ album.id } />
+            
+            {
+                [...genreBuckets.keys()].map(
+                    (genre, idx) => {
+                        return (
+                            <AlbumListByGenre 
+                                genre={genre} 
+                                albums={genreBuckets.get(genre)} 
+                                selectedAlbums={selectedAlbums}
+                                handleAlbumItemClick={handleAlbumItemClick} 
+                                key={idx} 
+                            />
+                        )
                     }
-                )}
-            </ul>
+                )
+            }
+
+        
         </section>
     )
 

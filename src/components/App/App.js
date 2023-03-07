@@ -24,6 +24,7 @@ function App() {
 
         const yourAlbums = await getSpotifyAlbumsFromDiscogsUserCollection(usernameInput);
         setSpotifyAlbums(yourAlbums);
+        console.log('your albums:', yourAlbums);
         navigate('/spotify_albums');
     }
 
