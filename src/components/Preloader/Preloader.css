@@ -1,0 +1,23 @@
+.preloader {
+	overflow: hidden;
+	margin-top: 20px;
+}
+
+.preloader__circle {
+	display: block;
+	width: 50px;
+	border-radius: 50%;
+	margin: auto;
+	animation: spin .75s infinite linear;
+	z-index: 2;
+}
+
+.preloader_hidden {
+	display: none;
+}
+
+@keyframes spin {
+	100% {
+		transform: rotate(360deg);
+	}
+}

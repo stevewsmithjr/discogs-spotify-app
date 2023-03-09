@@ -15,14 +15,17 @@ function App() {
 
     const [spotifyAlbums, setSpotifyAlbums] = useState([]);
     const [spotifyGridData, setSpotifyGridData] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     
     const handleUserSearchFormSubmit = async (usernameInput) => {
+        setIsLoading(true);
         await getAuthenticatedSpotifyTokenFromAPI()
             .then(token => setAuthenticatedSpotifyToken(token))
             .catch(err => console.log(err));
 
         const yourAlbums = await getSpotifyAlbumsFromDiscogsUserCollection(usernameInput);
+        setIsLoading(false);
         setSpotifyAlbums(yourAlbums);
         console.log('your albums:', yourAlbums);
         navigate('/spotify_albums');
@@ -42,7 +45,7 @@ function App() {
             <Routes>
                 <Route  
                     path="/"                 
-                    element={<DiscogsUserSearchForm handleUserSearchFormSubmit={handleUserSearchFormSubmit}/>}
+                    element={<DiscogsUserSearchForm isLoading={ isLoading } handleUserSearchFormSubmit={handleUserSearchFormSubmit}/>}
                 />
                 <Route 
                     path="/spotify_albums" 

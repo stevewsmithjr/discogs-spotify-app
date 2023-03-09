@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import Preloader from '../Preloader/Preloader';
 import './DiscogsUserSearchForm.css';
 
-function DiscogsUserSearchForm({ handleUserSearchFormSubmit }) {
+function DiscogsUserSearchForm({ isLoading, handleUserSearchFormSubmit }) {
 	const [username, setUsername] = useState('');
 
 	const handleUsernameChange = (e) => {
@@ -17,22 +18,24 @@ function DiscogsUserSearchForm({ handleUserSearchFormSubmit }) {
 			<h2 className="main__text">
 				Connect your Discogs account to view your collection
 			</h2>
-			<form className="username__form" onSubmit={handleSubmit}>
-				<h4 className="form__label">Enter Discogs username</h4>
-				<input
-					type="text"
-					placeholder="Discogs username"
-					minLength="1"
-					maxLength="40"
-					value={username}
-					name="text"
-					className="form__input form__input_type_username"
-					onChange={handleUsernameChange}
-				/>
-				<button className="form__submit">
-					Search
-				</button>
-			</form>
+			{isLoading ? (<Preloader />) :
+				(<form className="username__form" onSubmit={handleSubmit}>
+					<h4 className="form__label">Enter Discogs username</h4>
+					<input
+						type="text"
+						placeholder="Discogs username"
+						minLength="1"
+						maxLength="40"
+						value={username}
+						name="text"
+						className="form__input form__input_type_username"
+						onChange={handleUsernameChange}
+					/>
+					<button className="form__submit">
+						Search
+					</button>
+				</form>)
+			}
 		</main>
 	)
 
