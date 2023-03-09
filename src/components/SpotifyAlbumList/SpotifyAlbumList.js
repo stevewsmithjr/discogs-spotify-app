@@ -1,5 +1,4 @@
 import React, {useCallback, useState} from 'react';
-import SpotifyAlbumItem from '../SpotifyAlbumItem/SpotifyAlbumItem';
 import {flattenSpotifyAlbumData, extractGenresFromAlbums} from '../../utils/processData';
 import './SpotifyAlbumList.css';
 import AlbumListByGenre from '../AlbumListByGenre/AlbumListByGenre';
