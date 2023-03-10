@@ -11,6 +11,7 @@
     "ag-grid-react": "^29.1.0",
     "buffer": "^6.0.3",
     "react": "^16.14.0",
+    "react-audio-player": "^0.17.0",
     "react-dom": "^16.14.0",
     "react-router-dom": "^6.8.2",
     "react-scripts": "5.0.1",

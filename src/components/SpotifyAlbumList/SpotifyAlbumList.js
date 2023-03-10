@@ -3,24 +3,11 @@ import {flattenSpotifyAlbumData, extractGenresFromAlbums} from '../../utils/proc
 import './SpotifyAlbumList.css';
 import AlbumListByGenre from '../AlbumListByGenre/AlbumListByGenre';
 
-function SpotifyAlbumList({ albums, handleSpotifyDataGridNavigate }) {
+function SpotifyAlbumList({ albums, selectedAlbums, handleSpotifyDataGridNavigate, handleAlbumItemClick }) {
 
-    
+    console.log("recieved on render", selectedAlbums);
     const [albumList, setAlbumList] = useState(flattenSpotifyAlbumData(albums));
     const [genreBuckets, setGenreBuckets] = useState(extractGenresFromAlbums(flattenSpotifyAlbumData(albums)));
-    const [selectedAlbums, setSelectedAlbums] = useState(new Map());
-    
-    const handleAlbumItemClick = useCallback( (album) => {
-        const updatedAlbumMap = new Map(selectedAlbums);
-        if (updatedAlbumMap.has(album.id)) {
-            updatedAlbumMap.delete(album.id);
-        }
-        else {
-            updatedAlbumMap.set(album.id, album.albumData);
-        }
-        setSelectedAlbums(updatedAlbumMap);
-        console.log(updatedAlbumMap);
-    }, [selectedAlbums]);
 
     const handleDataGridButtonClick = () => {
         handleSpotifyDataGridNavigate(selectedAlbums);
